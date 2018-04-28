@@ -1,0 +1,101 @@
+---
+title: "lab12"
+author: "Matthew Clagett"
+date: "April 24, 2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, fig.path = 'lab12-images/')
+install.packages("xm12")
+library(XML)
+library(rvest)
+library(stringr)
+library(magrittr)
+
+basket <- "https://www.basketball-reference.com"
+gsw <- "/teams/GSW/2017.html"
+gsw_url <- paste0(basket, gsw)
+
+download.file(gsw_url, "gsw-roster-2017.html")
+gsw_roster <- readHTMLTable("gsw-roster-2017.html")
+gsw_roster
+
+
+
+basket <- "https://www.basketball-reference.com"
+bos <- "/teams/BOS/2017.html"
+bos_url <- paste0(basket, bos)
+
+download.file(bos_url, "bos-roster-2017.html")
+bos_roster <- readHTMLTable("bos-roster-2017.html")
+bos_roster
+class(bos_roster)
+
+nba_html <- paste0(basket, "/leagues/NBA_2017.html")
+xml_doc <- read_html(nba_html)
+xml_text <- xml_doc %>% html_text()
+
+
+xml_doc %>% html_nodes("h2") %>% html_text
+
+xml_h1 <- xml_doc %>% html_nodes("h1") %>% html_text
+xml_strong <- xml_doc %>% html_nodes("strong") %>% html_text
+xml_button <- xml_doc %>% html_nodes("button") %>% html_text
+xml_strong
+
+xml_doc %>% html_nodes("p.listhead") %>% html_text
+
+xml_doc %>% html_nodes(xpath = '//p[@class="listhead")') %>% html_text
+xml_doc %>% html_nodes(xpath = '//ul[@class=""]//a') %>% html_text
+
+xml_table1 <- xml_doc %>% html_nodes("table") %>% extract(1)
+class(xml_table1)
+tbl1 <- html_table(xml_table1)
+head(tbl1)
+
+xml_table2 <- xml_doc %>% html_nodes("table") %>% extract(2)
+xml_tables <- xml_doc %>% html_nodes("table") %>% extract(1:2)
+
+xml_tables %>% html_nodes("a") %>% html_text
+
+
+#  Store the href attributes in a chracter vector
+hrefs <- xml_tables %>% html_nodes("a") %>% html_attr("href")
+
+# Use string manip to etract the team abbreviations
+teams <- unlist(str_extract_all(hrefs, "[A-Z]{3}"))
+
+# Create char vector with files BOS-roster.csv, CLE-roster.csv.. etc
+files <- paste0(teams,"-roster-2017.csv")
+```
+My turn
+```{r}
+basket <- "https://www.basketball-reference.com"
+gsw <- "/teams/GSW/2017.html"
+gsw_url <- paste0(basket, gsw)
+
+html <- read_html(urls[1]) %>% html_table
+as.data.frame(html)
+
+urls <- paste0(basket, hrefs)
+
+for(i in 1:length(urls)){
+     html <- read_html(urls[i]) %>% html_table
+     roster <- as.data.frame(html)
+     write.csv(roster, paste0("output/",teams[i],"-roster-2017.csv"))
+}
+```
+Build as a global table with a column for team name
+```{r} 
+nba_roster <- data.frame()
+for(i in 1:length(urls)){
+     html <- read_html(urls[i]) %>% html_table
+     roster <- as.data.frame(html)
+     roster_wteam <- cbind(roster, Team = rep(teams[i], nrow(roster)))
+     nba_roster <- rbind(nba_roster, roster_wteam)
+}
+write.csv(nba_roster, "output/nba-rosters-2017.csv", row.names=FALSE)
+```

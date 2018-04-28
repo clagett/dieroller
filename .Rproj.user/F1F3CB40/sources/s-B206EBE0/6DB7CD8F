@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1524885371204.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "488110587",
+    "id" : "6DB7CD8F",
+    "lastKnownWriteTime" : 1524895763,
+    "last_content_update" : 1524895763887,
+    "path" : "C:/Users/mrcla/Desktop/hw-stat133/hw05/hw05/hw05.Rmd",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "207,0",
+        "last_setup_crc32" : "B206EBE0bb338d19",
+        "scrollLine" : "202",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

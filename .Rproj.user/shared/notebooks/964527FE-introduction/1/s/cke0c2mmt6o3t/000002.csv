@@ -1,0 +1,3 @@
+"0","die <- die()"
+"2","Error in die() : could not find function ""die""
+"

@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1524883319987.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "FA27D80A",
+    "lastKnownWriteTime" : 1524883481,
+    "last_content_update" : 1524883481158,
+    "path" : "C:/Users/mrcla/Desktop/hw-stat133/hw05/dieroller/R/rolls.R",
+    "project_path" : "R/rolls.R",
+    "properties" : {
+        "cursorPosition" : "36,0",
+        "scrollLine" : "24",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

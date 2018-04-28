@@ -1,0 +1,8 @@
+#=====================================================================
+# Title: HW05
+# Author: Matthew Clagett
+# Description: program two classes of objects:
+#              1. a regular "die" with six sides
+#              2. an object "roll" (rolls of die)
+#=====================================================================
+

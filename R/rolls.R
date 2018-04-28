@@ -1,0 +1,107 @@
+#' @title check_times
+#' @description aux function checks whether input is a valid number of rolls for a die
+#' @param times number of times the die is to be rolled
+check_times <- function(times){
+     if(times < 1 | times%%1!=0){
+          stop("die roll must be a positive integer")
+     }
+}
+
+#' @title print.roll
+#' @description print method for objects of type roll
+#' @export
+print.roll <- function(x, ...){
+     cat('object "roll"\n\n')
+     print(x$rolls)
+}
+
+#' @title roll
+#' @description takes a die and a number of rolls, returns object class rolls
+#' @param die object of die class
+#' @param times number of rolls
+#' @export
+#' @examples
+#' # roll fair die 10 times
+#' roll <- roll(fair_die, 10)
+#'
+#'
+roll <- function(die, times){
+     check_times(times)
+     rolls <- list(rolls = sample(die$side, times, replace=TRUE, prob = die$prob),
+                   sides = die$side,
+                   prob = die$prob,
+                   total = times)
+     rolls <- structure(rolls, class = "roll")
+     rolls
+}
+
+
+
+#' @title summary.roll
+#' @description summary method for objects of type roll
+#' @export
+summary.roll <- function(x, ...){
+     summary <- list(freqs = data.frame(count = table(x$rolls),
+                                        prop = x$prob))
+     colnames(summary$freqs) <- c("side", "count", "prop")
+     structure(summary, class="summary.roll")
+}
+
+#' @title summary.roll
+#' @description print method for summary.roll
+#' @export
+print.summary.roll <- function(x, ...){
+     cat('summary "roll"\n\n')
+     print(x$freqs)
+}
+
+
+
+#' @title extraction.roll
+#' @description plot method for object of class "roll". plots frequencies of each side
+#' @export
+plot.roll <- function(x, ...){
+     relative_freqs <- x$freqs$count/sum(x$freqs$count)
+     barplot(table(x$rolls)/length(x$rolls),
+             xlab = "sides of die",
+             ylab = "relative frequencies",
+             main = paste0("Frequencies in a series of ",length(x$rolls)," rolls"))
+}
+
+
+
+#' @title extraction.roll
+#' @description extraction method for object of class "roll"
+#' @export
+"[.roll" <- function(x, i){
+     x$rolls[i]
+}
+
+
+#' @title impute roll
+#' @description print method for summary.roll
+#' @export
+"[<-.roll" <- function(x,i,value){
+     if(!(value %in% x$sides)){
+          stop(paste('\nReplacing value must be in: ',x$sides))
+     }
+     if(i>x$total){
+          stop("\nindex out of bounds")
+     }
+     x$rolls[i] <- value
+     x
+}
+
+
+#' @title summary.roll
+#' @description print method for summary.roll
+#' @export
+"+.roll" <- function(obj, incr){
+     if(length(incr) != 1 | incr <= 0){
+          stop("\ninvalid addition (must be positive")
+     }
+     more_rolls <- roll(obj, times = incr)
+     obj$rolls <- c(obj$rolls, more_rolls$rolls)
+     obj$total <- obj$total + incr
+     obj
+}

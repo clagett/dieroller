@@ -1,0 +1,16 @@
+rolls <- matrix(nrow=1000, ncol =4)
+for (i in 1:1000){
+     rolls[i,] <- roll(die, 4)$rolls
+}
+rolls <- as.data.frame(rolls)
+
+
+rf <- apply(rolls, 1, function(x]){6 %in% x})
+
+relative_freqs <- rep(0,1000)
+for (i in 1:1000){
+     relative_freqs[i] <- sum(rf[1:i]/length(rf[1:i]))
+}
+relative_freqs
+
+                                

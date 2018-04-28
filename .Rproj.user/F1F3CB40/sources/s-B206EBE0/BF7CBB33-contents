@@ -1,0 +1,194 @@
+---
+title: "hw05"
+author: "Matthew Clagett"
+date: "April 27, 2018"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#' @title check_sides
+#' @description checks the number of sides of a die to see if it is a value argument
+#' @param input sides of the die
+#' @return 
+check_sides <- function(sides){
+     if(length(sides) != 6 ){
+          stop("sides must be a vector length of 6")
+     }
+}
+
+#' @title check_prob
+#' @description checks the probabilities to see if they are a correct input
+#' @param input probabilities of the die sides
+#' @return 
+check_prob <- function(prob){
+     if(sum(prob) != 1){
+          stop("elements in prob must add up to 1")
+     } else if(length(prob) != 6){
+          stop("prob must be a vector length of 6")
+     }
+}
+
+#' @title print.die
+#' @description print method for objects of type "die"
+print.die <- function(x, ...){
+     cat('object "die"\n\n')
+     print(data.frame(side = x$side, prob = x$prob))
+}
+
+#' @title die object
+#' @description creates an object of class "die"
+#' @param input sides of each die - six total
+#' @param input probabilities corresponding to each side of the die
+die <- function(sides = c(1:6), prob = rep(1/length(sides), length(sides))){
+     check_sides(sides)
+     check_prob(prob)
+     
+     die1 <- list(side = sides,
+                  prob = prob)
+     die1 <- structure(die1, class = "die")
+     die1
+}
+fair_die <- die()
+fair_die
+weird_die <- die(sides = c("i", "ii", "iii", "iv", "v", "vi"))
+weird_die
+loaded_die <- die(prob = c(0.075, .1, .125, .15, .2, .35))
+loaded_die
+bad_die <- die(sides = c("a", "b", "c", "d", "e"))
+bad_die <- die(sides = c("a", "b", "c", "d", "e", "f"),
+               prob = c(0.2, 0.1, 0.1, 0.1, 0.5, 0.1))
+
+
+
+#' @title check_times
+#' @description checks whether input is a valid number of rolls for a die
+#' @param times number of times the die is to be rolled
+check_times <- function(times){
+     if(times < 1 | times%%1!=0){
+          stop("die roll must be a positive integer")
+     }
+}
+
+#' @title print.roll
+#' @description print method for objects of type roll
+print.roll <- function(x, ...){
+     cat('object "roll"\n\n')
+     print(x$rolls)
+}
+
+#' @title roll
+#' @description takes a die and a number of rolls, returns object class rolls
+#' @param die object of die class
+#' @param times number of rolls
+roll <- function(die, times){
+     check_times(times)
+     rolls <- list(rolls = sample(die$side, times, replace=TRUE, prob = die$prob),
+                   sides = die$side,
+                   prob = die$prob,
+                   total = times)
+     rolls <- structure(rolls, class = "roll")
+     rolls
+}
+set.seed(123)
+fair50 <- roll(fair_die, times = 50)
+fair_50rolls <- roll(fair_die, times=50)
+fair_50rolls
+names(fair50)
+fair50$rolls
+fair50$sides
+fair50$prob
+fair50$total
+
+str_die <- die(sides = c("a", "b", "c", "d", "e", "f"),
+               prob = c(0.075, 0.1, 0.125, 0.15, 0.2, 0.35))
+set.seed(123)
+str_rolls <- roll(str_die, times=20)
+names(str_rolls)
+str_rolls
+table(str_rolls$rolls)
+
+
+#' @title summary.roll
+#' @description summary method for objects of type roll
+summary.roll <- function(x, ...){
+     summary <- list(freqs = data.frame(count = table(x$rolls),
+                prop = x$prob))
+     colnames(summary$freqs) <- c("side", "count", "prop")
+     structure(summary, class="summary.roll")
+}
+
+#' @title summary.roll
+#' @description print method for summary.roll
+print.summary.roll <- function(x, ...){
+     cat('summary "roll"\n\n')
+     print(x$freqs)
+}
+fair50_sum <- summary(fair_50rolls)
+class(fair50_sum)
+fair50_sum
+fair50_sum$freqs
+
+plot.roll <- function(x, ...){
+     relative_freqs <- x$freqs$count/sum(x$freqs$count)
+     barplot(table(x$rolls)/length(x$rolls), 
+             xlab = "sides of die",
+             ylab = "relative frequencies", 
+             main = paste0("Frequencies in a series of ",length(x$rolls)," rolls"))
+}
+?barplot
+plot(fair_50rolls)
+
+#' @title extraction.roll
+#' @description extraction method for object of class "roll"
+"[.roll" <- function(x, i){
+     x$rolls[i]
+}
+set.seed(123)
+fair_die <- die()
+fair500 <- roll(fair_die, times=500)
+
+summary(fair500)
+fair500[500]
+
+
+#' @title summary.roll
+#' @description print method for summary.roll
+"[<-.roll" <- function(x,i,value){
+     if(!(value %in% x$sides)){
+          stop(paste('\nReplacing value must be in: ',x$sides))
+     }
+     if(i>x$total){
+          stop("\nindex out of bounds")
+     }
+     x$rolls[i] <- value
+     x
+}
+fair500[500] <- 1
+fair500[500]
+
+
+
+fair500$total
+#' @title summary.roll
+#' @description print method for summary.roll
+"+.roll" <- function(obj, incr){
+     if(length(incr) != 1 | incr <= 0){
+          stop("\ninvalid addition (must be positive")
+     }
+     more_rolls <- roll(obj, times = incr)
+     obj$rolls <- c(obj$rolls, more_rolls$rolls)
+     obj$total <- obj$total + incr
+     obj
+}
+
+fair500 + 10
+
+library(dieroller)
+
+```
+
+libr

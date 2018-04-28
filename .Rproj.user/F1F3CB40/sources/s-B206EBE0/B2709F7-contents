@@ -1,0 +1,54 @@
+#' @title check_sides
+#' @description checks the number of sides of a die to see if it is a value argument
+#' @param input sides of the die
+check_sides <- function(sides){
+     if(length(sides) != 6 ){
+          stop("sides must be a vector length of 6")
+     }
+}
+
+#' @title check_prob
+#' @description checks the probabilities to see if they are a correct input
+#' @param input probabilities of the die sides
+check_prob <- function(prob){
+     if(sum(prob) != 1){
+          stop("elements in prob must add up to 1")
+     } else if(length(prob) != 6){
+          stop("prob must be a vector length of 6")
+     }
+}
+
+#' @title print.die
+#' @description print method for objects of type "die"
+#' @export
+print.die <- function(x, ...){
+     cat('object "die"\n\n')
+     print(data.frame(side = x$side, prob = x$prob))
+}
+
+
+#' @title die object
+#' @description creates an object of class "die"
+#' @param sides sides of each die - six total
+#' @param prob probabilities corresponding to each side of the die
+#' @return object of class "die"
+#' @export
+#' @examples
+#' # default
+#' die <- die()
+#'
+#' # loaded die
+#' loaded <- die(c("i", "ii", "iii", "iv", "v", "vi"),c(0.1,0.2,0.3,0.2,0.1,0.1))
+#'
+die <- function(sides = c(1:6), prob = rep(1/length(sides))){
+     check_sides(sides)
+     check_prob(prob)
+
+     die1 <- list(side = sides,
+                  prob = prob)
+     die1 <- structure(die1, class = "die")
+     die1
+}
+
+
+

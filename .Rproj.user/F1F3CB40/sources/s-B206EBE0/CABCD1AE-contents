@@ -1,0 +1,24 @@
+---
+title: "Introduction "
+author: "Matthew Clagett"
+date: "4/27/2018"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to dieroller}
+  %\VignetteEngine{knitr::rmarkdown}
+  $\VignetteEncoding{UTF-8}
+---
+
+```{r, echo=FALSE, message=FALSE}
+knitr::opts_chunk$set(collapse=TRUE, comment = "#>")
+library(dieroller)
+```
+
+## Die Rolling
+
+The package "dieroller" provides the functions necessary to simulate rolling a die of six sides
+with the options to select the display of the sides, as well as probabilities, and to visualize.
+
+## Creating a coin
+
+
